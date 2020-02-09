@@ -117,7 +117,7 @@ class _HomeAppState extends State<HomeApp> {
           ),
           Container(
             width: 100,
-            height: 100,
+            height: 150,
             child: ListTile(
               leading: Icon(Icons.school),
               trailing: Icon(Icons.more_vert),)
