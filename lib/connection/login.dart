@@ -3,6 +3,7 @@ import 'signin.dart';
 import '../Database/dbhelper.dart';
 //import '../models/user.dart';
 import '../models/home.dart';
+import '../models/date_picker.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: ()
                 {
                   fetchData();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Date()));
                 },
               ),
             ),
@@ -75,16 +76,20 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   children: <Widget>[
                     Text("Creer un compte en cliquant "),
-                    Icon(Icons.add_to_home_screen),
+                    IconButton(icon: Icon(Icons.add_to_home_screen), onPressed:()
+                        {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                        }
+                    ),
                   ],
                 ),
-                RaisedButton(
-                  child: Text("Sign in"),
-                  onPressed: ()
-                  {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
-                  },
-                )
+                // RaisedButton(
+                //   child: Text("Sign in"),
+                //   onPressed: ()
+                //   {
+                //     Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                //   },
+                // )
               ],
             )
             

@@ -100,32 +100,30 @@ class _HomeAppState extends State<HomeApp> {
          Icon(Icons.home),
        ],
      ),
-     body: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Container(
-            width: 200,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Colors.blue,
-            ),
-            child: ListTile(
-              leading: Icon(Icons.school),
-              trailing: Icon(Icons.more_vert),
-            ),
-          ),
-          Container(
-            width: 100,
-            height: 150,
-            child: ListTile(
-              leading: Icon(Icons.school),
-              trailing: Icon(Icons.more_vert),)
-          ),
-          Container(),
-          Container()
-        ],
-      ),
+     body: Column(
+       children: <Widget>[
+         CircleAvatar(
+           backgroundImage: AssetImage("assets/todo.png"),
+         ),
+         Align(
+           alignment: Alignment.bottomLeft,
+           child: Container(
+             height: 100,
+             margin: EdgeInsets.symmetric(vertical: 20.0),
+             child: ListView(
+               scrollDirection: Axis.horizontal,
+               children: <Widget>[
+                 ListTile(
+                   leading: Icon(Icons.school),
+                   trailing: Icon(Icons.more_vert),
+                 )
+               ],
+             ),
+           ),
+
+         )
+       ],
+     )
     );
   }
 }
