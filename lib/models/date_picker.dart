@@ -10,6 +10,7 @@ class _DateState extends State<Date> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -22,7 +23,8 @@ class _DateState extends State<Date> {
                 context: context, 
                 initialDate: _dateTime==null? DateTime.now():_dateTime, 
                 firstDate: DateTime(1960),
-                lastDate: DateTime(2222))
+                lastDate: DateTime(2222)
+                )
                 .then((date)
                 {
                   setState(() {

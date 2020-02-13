@@ -14,7 +14,8 @@ class _LoginPageState extends State<LoginPage> {
   bool userVal;
   String username;
   String password;
-
+  String image;
+  var db = DbHelper();
   final _scaffold = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -63,10 +64,12 @@ class _LoginPageState extends State<LoginPage> {
               height: 48,
               child: RaisedButton(
                 child: Text("Login"),
-                onPressed: ()
+                onPressed: () async
                 {
                   fetchData();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Date()));
+                  image = await db.fetchImage(username, password);
+                  print(image);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
                 },
               ),
             ),
@@ -102,8 +105,6 @@ class _LoginPageState extends State<LoginPage> {
   void fetchData() async
   {
     
-    var db = DbHelper();
-  
     userVal = await db.fetchUser(username, password);
 
     if(userVal == true)

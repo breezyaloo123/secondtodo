@@ -58,6 +58,31 @@ class DbHelper {
     return todoU.insert('$table', user.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
   
+//method which get the photo
+Future<String> fetchImage(String username, String password) async
+{
+  var todoU = await db;
+  var res;
+  final Future<List<Map<String, dynamic>>> futureMaps = todoU.query('$table'); /*where: 'username = ? and password = ?',*//*whereArgs: [id]);*/
+
+  var maps = await futureMaps;
+
+  if(maps.length != 0)
+  {
+    //return User.fromMap(maps.first);
+    for(var i in maps)
+    {
+      //print(i.values.elementAt(3)+ " "+i.values.elementAt(4) + " "+i.values.elementAt(5));
+      if((i.values.elementAt(3) == username) && (i.values.elementAt(4) == password))
+      {
+        res= i.values.elementAt(5);
+        return res;
+      }
+    }
+  }
+
+  return null;
+}
 //method which read data
 Future<bool> fetchUser(String username, String password) async
 {
