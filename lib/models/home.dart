@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../tasks/read.dart';
 
 class HomeApp extends StatefulWidget {
 
@@ -63,13 +64,13 @@ class _HomeAppState extends State<HomeApp> {
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead()));
             }
           ),
           SpeedDialChild(
-            child: Icon(Icons.book),
-            backgroundColor: Colors.red,
-            label: 'read',
+            child: Icon(Icons.announcement),
+            backgroundColor: Colors.green,
+            label: 'Sport',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
@@ -77,9 +78,9 @@ class _HomeAppState extends State<HomeApp> {
             }
           ),
           SpeedDialChild(
-            child: Icon(Icons.book),
-            backgroundColor: Colors.red,
-            label: 'read',
+            child: Icon(Icons.local_movies),
+            backgroundColor: Colors.indigo,
+            label: 'Movies',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
@@ -87,9 +88,9 @@ class _HomeAppState extends State<HomeApp> {
             }
           ),
           SpeedDialChild(
-            child: Icon(Icons.book),
-            backgroundColor: Colors.red,
-            label: 'read',
+            child: Icon(Icons.chat),
+            backgroundColor: Colors.brown,
+            label: 'Chatting',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
