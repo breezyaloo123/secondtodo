@@ -109,15 +109,20 @@ class _HomeAppState extends State<HomeApp> {
      ),
      body: Column(
        children: <Widget>[
-         Padding(
-           padding: const EdgeInsets.only(right: 200.0,top: 20.0),
-           child: Container(
-            height: 100,
-            width: 100,
-            child: CircleAvatar(
-              backgroundImage: AssetImage("assets/login.png"),
-            ),
+         Row(
+           children: <Widget>[
+             Padding(
+               padding: const EdgeInsets.only(right: 150.0,top: 20.0,left: 20.0),
+               child: Container(
+                height: 100,
+                width: 100,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("assets/login.png"),
+                ),
+                 ),
              ),
+             Text("HH:MM"),
+           ],
          ),
          Padding(
            padding: const EdgeInsets.only(right: 40.0),  
@@ -157,8 +162,7 @@ class _HomeAppState extends State<HomeApp> {
             alignment: Alignment.bottomLeft,
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 20.0),
-              height: 150.0,
-              width: 100.0,
+              height: 200.0,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
@@ -171,19 +175,145 @@ class _HomeAppState extends State<HomeApp> {
                       elevation: 14.0,
                       borderRadius: BorderRadius.circular(24.0),
                       shadowColor: Color(0x802196F3),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 100.0),
-                            child: Icon(Icons.school),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.school,color:Colors.blue,),
+                              ),
+                              Padding(
+                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.menu), 
+                                )
+                            ],
                           ),
-                          Icon(Icons.menu)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            child: Text("1 Task restants"),
+                          ),
+                          Padding(
+                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            )
                         ],
                       ),                        
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(width: 10.0),
+                  Padding(
+                    padding:const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24.0),
+                      shadowColor: Color(0x802196F3),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.school,color:Colors.blue,),
+                              ),
+                              Padding(
+                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.menu), 
+                                )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            child: Text("1 Task restants"),
+                          ),
+                          Padding(
+                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            )
+                        ],
+                      ),                        
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Padding(
+                    padding:const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24.0),
+                      shadowColor: Color(0x802196F3),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.school,color:Colors.blue,),
+                              ),
+                              Padding(
+                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.menu), 
+                                )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            child: Text("1 Task restants"),
+                          ),
+                          Padding(
+                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            )
+                        ],
+                      ),                        
+                      ),
+                    ),
+                  ),
+                SizedBox(width: 10.0),
+                  Padding(
+                    padding:const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24.0),
+                      shadowColor: Color(0x802196F3),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.school,color:Colors.blue,),
+                              ),
+                              Padding(
+                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                child: Icon(Icons.menu), 
+                                )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            child: Text("1 Task restants"),
+                          ),
+                          Padding(
+                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            )
+                        ],
+                      ),
+                      ),
+                    ),
+                  ),
                 ],
               ),   
             ),
