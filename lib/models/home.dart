@@ -14,6 +14,7 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
+  
   // String way;
   // _HomeAppState({this.way});
 
@@ -41,7 +42,7 @@ class _HomeAppState extends State<HomeApp> {
       floatingActionButton: SpeedDial(
         marginRight: 18,
         marginBottom: 20,
-        animatedIcon: AnimatedIcons.menu_close,
+        animatedIcon: AnimatedIcons.home_menu,
         animatedIconTheme: IconThemeData(size: 22.0),
         closeManually: false,
         curve: Curves.bounceIn,
@@ -102,7 +103,7 @@ class _HomeAppState extends State<HomeApp> {
        backgroundColor: Colors.blue,
        title: Center(child: Text("TODO")),
        elevation: 0.0,
-       leading: Icon(Icons.menu),
+       leading: Icon(Icons.more),
        actions: <Widget>[
          Icon(Icons.exit_to_app),
        ],
@@ -186,7 +187,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.menu), 
+                                child: Icon(Icons.more), 
                                 )
                             ],
                           ),
@@ -223,7 +224,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.menu), 
+                                child: Icon(Icons.more), 
                                 )
                             ],
                           ),
@@ -260,7 +261,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.menu), 
+                                child: Icon(Icons.more_vert), 
                                 )
                             ],
                           ),
@@ -297,7 +298,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.menu), 
+                                child: Icon(Icons.more), 
                                 )
                             ],
                           ),

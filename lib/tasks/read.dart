@@ -6,58 +6,94 @@ class TaskRead extends StatefulWidget {
 }
 
 class _TaskReadState extends State<TaskRead> {
+  
   @override
   Widget build(BuildContext context) {
+    String task;
+    
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
         title: Text("READ"),
         elevation: 0.0,
+        centerTitle: true,
         actions: <Widget>[
           Icon(Icons.done_outline),
+          
         ],
       ),
-      body: ListView(
+      body: Stack(
+        alignment:AlignmentDirectional.bottomStart ,
         children: [
-        Column(
-              children:<Widget>[
-              Icon(Icons.add_alarm),
-              Text("Debut"),
-              Container(
-              decoration: BoxDecoration(
-                
-              ),
-                child: TextField(
-    
-                  decoration: InputDecoration(
-    
-                    border: OutlineInputBorder(
-    
-                      borderRadius: BorderRadius.circular(10.0),
-    
-                    ),
-    
-                    hintText: "Que voulez-vous faire?",
-    
-                    hoverColor: Colors.cyan,
-    
-                  ),
-    
-                  onChanged: (value)
-    
-                  {
-    
-    
-    
-                  },
-    
-                ),
-    
-              )
-    
+        Container(
+          height: 540.0,
+          child: ListView(
+            children: <Widget>[
+              Center(child: Text(task.toString())),
             ],
-  ),
-],
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+          child: Container(
+            height: 100.0,
+            decoration: BoxDecoration(
+              border: Border.all(width: 2.0,color: Colors.blue),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    IconButton(icon: Icon(Icons.add_alarm),
+                    onPressed: ()
+                    {
+
+                    }),
+                    Text("Debut"),
+                  ],
+                ),
+                Container(
+                  height: 100,
+                  width: 190,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Que voulez vous faire?",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        
+                      )
+                      ),
+                      onChanged: (value){
+                        task=value.toString();
+                      },
+                    ),
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.add_alarm),
+                      onPressed: (){},
+                    ),
+                    Text("Fin"),
+                  ],
+                ),
+                IconButton(icon: Icon(Icons.call_missed), 
+                onPressed: ()
+                {
+                  setState(() {
+                    
+                  });
+                })
+              ],
+            ),
+          ),
+        ),
+        ],
       ),
     );
   }

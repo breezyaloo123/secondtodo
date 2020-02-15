@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: "Entrer le mot de pass",
+                hintText: "Entrer le mot de passe",
                 icon: Icon(Icons.vpn_key),
               ),
               obscureText: true,
