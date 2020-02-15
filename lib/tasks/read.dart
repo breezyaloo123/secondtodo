@@ -10,6 +10,8 @@ class _TaskReadState extends State<TaskRead> {
   @override
   Widget build(BuildContext context) {
     String task;
+    String nn;
+    DateTime _dateTime;
     
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
@@ -29,7 +31,7 @@ class _TaskReadState extends State<TaskRead> {
           height: 540.0,
           child: ListView(
             children: <Widget>[
-              Center(child: Text(task.toString())),
+              Center(child: Text("Cool")),
             ],
           ),
         ),
@@ -47,9 +49,20 @@ class _TaskReadState extends State<TaskRead> {
                 Column(
                   children: <Widget>[
                     IconButton(icon: Icon(Icons.add_alarm),
-                    onPressed: ()
+                    onPressed: () async
                     {
-
+                        await showDatePicker(
+                          context: context, 
+                          initialDate: _dateTime==null? DateTime.now():_dateTime, 
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2222)
+                            )
+                    .then((date)
+                      {
+                          setState(() {
+                          _dateTime=date;
+                      });
+                      });
                     }),
                     Text("Debut"),
                   ],
@@ -77,7 +90,21 @@ class _TaskReadState extends State<TaskRead> {
                   children: <Widget>[
                     IconButton(
                       icon: Icon(Icons.add_alarm),
-                      onPressed: (){},
+                      onPressed: () async
+                      {
+                        await showDatePicker(
+                          context: context, 
+                          initialDate: _dateTime==null? DateTime.now():_dateTime, 
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2222)
+                            )
+                    .then((date)
+                      {
+                          setState(() {
+                          _dateTime=date;
+                      });
+                      });
+                      },
                     ),
                     Text("Fin"),
                   ],
@@ -86,7 +113,7 @@ class _TaskReadState extends State<TaskRead> {
                 onPressed: ()
                 {
                   setState(() {
-                    
+                    nn=task;
                   });
                 })
               ],

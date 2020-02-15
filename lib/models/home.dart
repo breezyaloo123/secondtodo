@@ -103,7 +103,7 @@ class _HomeAppState extends State<HomeApp> {
        backgroundColor: Colors.blue,
        title: Center(child: Text("TODO")),
        elevation: 0.0,
-       leading: Icon(Icons.more),
+       leading: Icon(Icons.menu),
        actions: <Widget>[
          Icon(Icons.exit_to_app),
        ],
@@ -187,7 +187,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more), 
+                                child: Icon(Icons.more_vert), 
                                 )
                             ],
                           ),
@@ -224,7 +224,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more), 
+                                child: Icon(Icons.more_vert), 
                                 )
                             ],
                           ),
@@ -298,7 +298,7 @@ class _HomeAppState extends State<HomeApp> {
                               ),
                               Padding(
                                 padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more), 
+                                child: Icon(Icons.more_vert), 
                                 )
                             ],
                           ),
