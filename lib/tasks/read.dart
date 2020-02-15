@@ -24,7 +24,9 @@ class _TaskReadState extends State<TaskRead> {
               Icon(Icons.add_alarm),
               Text("Debut"),
               Container(
-    
+              decoration: BoxDecoration(
+                
+              ),
                 child: TextField(
     
                   decoration: InputDecoration(
