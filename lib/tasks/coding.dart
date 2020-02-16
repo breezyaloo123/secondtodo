@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TaskRead extends StatefulWidget {
+class Coding extends StatefulWidget {
   @override
-  _TaskReadState createState() => _TaskReadState();
+  _CodingState createState() => _CodingState();
 }
 
-class _TaskReadState extends State<TaskRead> {
-  
+class _CodingState extends State<Coding> {
+  DateTime _dateTime;
+  String task;
   @override
   Widget build(BuildContext context) {
-    String task;
-    String nn;
-    DateTime _dateTime;
-    
+
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
-        title: Text("READ"),
+        title: Text("CODING"),
         elevation: 0.0,
         centerTitle: true,
         actions: <Widget>[

@@ -29,6 +29,7 @@ dependencies:
   path_provider: ^1.6.0
   path: ^1.6.4
   flutter_speed_dial: ^1.2.5
+  location: ^2.4.0
 
 dev_dependencies:
   flutter_test:

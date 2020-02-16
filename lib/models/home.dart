@@ -3,7 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo1/services/data.dart';
+import 'package:todo1/services/lacation_services.dart';
+import 'package:todo1/tasks/coding.dart';
+import 'package:todo1/tasks/sport.dart';
+import 'package:todo1/tasks/movie.dart';
 import '../tasks/read.dart';
+import 'package:location/location.dart';
 
 class HomeApp extends StatefulWidget {
 
@@ -21,12 +27,20 @@ class _HomeAppState extends State<HomeApp> {
   //var file = new File('way');
   SharedPreferences preferences;
 
+  double time;
+
+  LocationServices a;
+
+
   
 
 
-  Future getimage() async
+  getHour() 
   {
-    preferences = await SharedPreferences.getInstance();
+    setState(() async{
+    time = await a.getTime();      
+    });
+
   }
   @override
   void initState(){
@@ -42,7 +56,8 @@ class _HomeAppState extends State<HomeApp> {
       floatingActionButton: SpeedDial(
         marginRight: 18,
         marginBottom: 20,
-        animatedIcon: AnimatedIcons.home_menu,
+        
+        animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 22.0),
         closeManually: false,
         curve: Curves.bounceIn,
@@ -68,13 +83,13 @@ class _HomeAppState extends State<HomeApp> {
             }
           ),
           SpeedDialChild(
-            child: Icon(Icons.announcement),
+            child: Icon(Icons.directions_run),
             backgroundColor: Colors.green,
             label: 'Sport',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Sport()));
             }
           ),
           SpeedDialChild(
@@ -84,17 +99,18 @@ class _HomeAppState extends State<HomeApp> {
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>Movie()));
 
             }
           ),
           SpeedDialChild(
-            child: Icon(Icons.chat),
+            child: Icon(Icons.code),
             backgroundColor: Colors.brown,
-            label: 'Chatting',
+            label: 'Coding',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Coding()));
             }
           ),
         ],
