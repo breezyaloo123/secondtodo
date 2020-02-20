@@ -59,7 +59,7 @@ class DbHelper {
   }
   
 //method which get the photo
-Future<String> fetchImage(String username, String password) async
+Future<String> fetchUser1(String username, String password) async
 {
   var todoU = await db;
   var res;
@@ -75,13 +75,20 @@ Future<String> fetchImage(String username, String password) async
       //print(i.values.elementAt(3)+ " "+i.values.elementAt(4) + " "+i.values.elementAt(5));
       if((i.values.elementAt(3) == username) && (i.values.elementAt(4) == password))
       {
-        res= i.values.elementAt(5);
+        res= i.values.elementAt(1)+" "+i.values.elementAt(2);
         return res;
       }
     }
   }
-
   return null;
+}
+
+Future<List<Map<String,dynamic>>> aa(String username, String password) async
+{
+  var todoU = await db;
+  final Future<List<Map<String, dynamic>>> futureMaps = todoU.query('$table');
+
+  return futureMaps;
 }
 //method which read data
 Future<bool> fetchUser(String username, String password) async
@@ -104,7 +111,7 @@ Future<bool> fetchUser(String username, String password) async
     }
   }
 
-  return null;
+  return false;
 }
 
 // Future<List<User>> fetchAll() async

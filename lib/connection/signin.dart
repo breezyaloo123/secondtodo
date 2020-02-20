@@ -19,6 +19,7 @@ class _SigninState extends State<Signin> {
   String pseudo;
   String password;
   String password1;
+ 
   var image;
   final db = DbHelper();
   bool ischecked = false;
@@ -180,7 +181,8 @@ class _SigninState extends State<Signin> {
                       {
                         //User user = new User(prenom,nom,pseudo,password,image.toString());
                         insert();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
+                         String name = prenom +" "+nom;
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp(way: name,)));
                       }
                     },
                   ),

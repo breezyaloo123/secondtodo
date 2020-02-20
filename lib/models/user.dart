@@ -7,6 +7,7 @@ class User{
 
 
  User(this.prenom,this.nom,this.pseudo,this.password,this.image);
+ 
 
 //the getter and setter
 

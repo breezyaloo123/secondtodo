@@ -15,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   String username;
   String password;
   String image;
+  String name;
   var db = DbHelper();
   final _scaffold = GlobalKey<ScaffoldState>();
   @override
@@ -38,6 +39,15 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Image.asset("assets/login.png"),
             TextFormField(
+              
+              enableSuggestions: true,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: true,
+                selectAll: true
+              ),
+              textInputAction: TextInputAction.go,
               decoration: InputDecoration(
                 hintText: "Entrer votre pseudo",
                 icon: Icon(Icons.account_circle),
@@ -48,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             TextFormField(
+              textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 hintText: "Entrer le mot de passe",
                 icon: Icon(Icons.vpn_key),
@@ -66,10 +77,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text("Login"),
                 onPressed: () async
                 {
-                  fetchData();
-                  image = await db.fetchImage(username, password);
-                  print(image);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
+                  // fetchData();
+                  // //var name = await db.fetchUser1(username,password);
+                  // print(name);
+                  fetchUser();
+                  
                 },
               ),
             ),
@@ -102,20 +114,48 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void fetchData() async
-  {
-    
-    userVal = await db.fetchUser(username, password);
 
-    if(userVal == true)
+ void fetchUser() async
+{
+
+  var maps = await db.aa(username, password);
+
+  if(maps.length != 0)
+  {
+    //return User.fromMap(maps.first);
+    for(var i in maps)
     {
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
-    }
-    else
-    {
-      _snackbar();
+      print(i.values.elementAt(3)+ " "+i.values.elementAt(4) + " "+i.values.elementAt(5));
+      if((i.values.elementAt(3) == username) && (i.values.elementAt(4) == password))
+      {
+        name=i.values.elementAt(1)+" "+i.values.elementAt(2);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp(way:name)));
+        
+      }
+      else
+      {
+          _snackbar();
+      }
     }
   }
+} 
+
+  // void fetchData() async
+  // {
+    
+  //   userVal = await db.fetchUser(username, password);
+
+  //   if(userVal == true)
+  //   {
+      
+  //     Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp(way: username)));
+  //     //Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
+  //   }
+  //   else
+  //   {
+  //     _snackbar();
+  //   }
+  // }
 
     _snackbar()
   {

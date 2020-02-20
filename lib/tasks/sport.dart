@@ -28,7 +28,8 @@ class _SportState extends State<Sport> {
           height: 540.0,
           child: ListView(
             children: <Widget>[
-              Center(child: Text("Cool")),
+              Center(child: Text(task==null?'':task.toString())),
+              Text(_dateTime==null?'':_dateTime.toString()),
             ],
           ),
         ),

@@ -13,16 +13,16 @@ import 'package:location/location.dart';
 
 class HomeApp extends StatefulWidget {
 
-  //String way;
-  //HomeApp({Key key, @required this.way}) : super(key: key);
+  String way;
+  HomeApp({Key key, @required this.way}) : super(key: key);
   @override
-  _HomeAppState createState() => _HomeAppState();
+  _HomeAppState createState() => _HomeAppState(way: this.way);
 }
 
 class _HomeAppState extends State<HomeApp> {
   
-  // String way;
-  // _HomeAppState({this.way});
+  String way;
+  _HomeAppState({this.way});
 
   //var file = new File('way');
   SharedPreferences preferences;
@@ -143,7 +143,7 @@ class _HomeAppState extends State<HomeApp> {
          ),
          Padding(
            padding: const EdgeInsets.only(right: 40.0),  
-           child: Text("Hello, Breezy",style: TextStyle(
+           child: Text("Hello ,"+way.toString(),style: TextStyle(
              color: Colors.white,
              fontSize: 20.0,
              fontStyle: FontStyle.italic,

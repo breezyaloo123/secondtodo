@@ -6,12 +6,14 @@ class TaskRead extends StatefulWidget {
 }
 
 class _TaskReadState extends State<TaskRead> {
-  
-  @override
-  Widget build(BuildContext context) {
+    DateTime _dateTime;
+    DateTime _dateTime1;
     String task;
     String nn;
-    DateTime _dateTime;
+  @override
+  Widget build(BuildContext context) {
+
+
     
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
@@ -20,7 +22,11 @@ class _TaskReadState extends State<TaskRead> {
         elevation: 0.0,
         centerTitle: true,
         actions: <Widget>[
-          Icon(Icons.check),
+          IconButton(icon: Icon(Icons.check), 
+          onPressed: ()
+          {
+
+          })
           
         ],
       ),
@@ -31,7 +37,9 @@ class _TaskReadState extends State<TaskRead> {
           height: 540.0,
           child: ListView(
             children: <Widget>[
-              Center(child: Text("Cool")),
+              Center(child: Text(task==null?'':task.toString())),
+              Text(_dateTime==null?'':_dateTime.toString()),
+              Text(_dateTime1==null?'':_dateTime1.toString()),
             ],
           ),
         ),
@@ -82,6 +90,7 @@ class _TaskReadState extends State<TaskRead> {
                       ),
                       onChanged: (value){
                         task=value.toString();
+                        
                       },
                     ),
                   ),
@@ -94,14 +103,14 @@ class _TaskReadState extends State<TaskRead> {
                       {
                         await showDatePicker(
                           context: context, 
-                          initialDate: _dateTime==null? DateTime.now():_dateTime, 
+                          initialDate: _dateTime1==null? DateTime.now():_dateTime1, 
                           firstDate: DateTime(1960),
                           lastDate: DateTime(2222)
                             )
                     .then((date)
                       {
                           setState(() {
-                          _dateTime=date;
+                          _dateTime1=date;
                       });
                       });
                       },
@@ -114,7 +123,9 @@ class _TaskReadState extends State<TaskRead> {
                     IconButton(icon: Icon(Icons.arrow_upward),
                     onPressed: ()
                     {
-
+                      setState(() {
+                        
+                      });
                     }),
                     Text("Valider")
                   ],
