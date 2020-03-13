@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:todo1/Database/dbhelper.dart';
+import 'package:todo1/models/task.dart';
+import '../models/globalThing.dart' as value;
 
 class TaskRead extends StatefulWidget {
+
   @override
   _TaskReadState createState() => _TaskReadState();
 }
@@ -8,8 +12,18 @@ class TaskRead extends StatefulWidget {
 class _TaskReadState extends State<TaskRead> {
     DateTime _dateTime;
     DateTime _dateTime1;
+    DateTime deb;
     String task;
+    String pseudo;
     String nn;
+    String type ="READ";
+    String datedeb;
+    String datefin;
+
+    var db = new DbHelper();
+  
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -25,7 +39,7 @@ class _TaskReadState extends State<TaskRead> {
           IconButton(icon: Icon(Icons.check), 
           onPressed: ()
           {
-
+            addTask();
           })
           
         ],
@@ -37,9 +51,9 @@ class _TaskReadState extends State<TaskRead> {
           height: 540.0,
           child: ListView(
             children: <Widget>[
-              Center(child: Text(task==null?'':task.toString())),
-              Text(_dateTime==null?'':_dateTime.toString()),
-              Text(_dateTime1==null?'':_dateTime1.toString()),
+              Text(task==null?'':task.toString()),
+              Text(_dateTime==null?'':datedeb=_dateTime.day.toString()+'-'+_dateTime.month.toString()+'-'+_dateTime.year.toString()),
+              Text(_dateTime1==null?'':datefin=_dateTime1.day.toString()+'-'+_dateTime1.month.toString()+'-'+_dateTime1.year.toString()),
             ],
           ),
         ),
@@ -59,16 +73,22 @@ class _TaskReadState extends State<TaskRead> {
                     IconButton(icon: Icon(Icons.add_alarm),
                     onPressed: () async
                     {
-                        await showDatePicker(
+                        deb=await showDatePicker(
                           context: context, 
                           initialDate: _dateTime==null? DateTime.now():_dateTime, 
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2222)
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2222),
+                          builder: (BuildContext context, Widget child)
+                          {
+                            return Theme(data: ThemeData.dark(), child: child);
+                          }
                             )
                     .then((date)
                       {
                           setState(() {
                           _dateTime=date;
+                          
+                          
                       });
                       });
                     }),
@@ -104,8 +124,12 @@ class _TaskReadState extends State<TaskRead> {
                         await showDatePicker(
                           context: context, 
                           initialDate: _dateTime1==null? DateTime.now():_dateTime1, 
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2222)
+                          firstDate: deb,
+                          lastDate: DateTime(2222),
+                          builder: (BuildContext context, Widget child)
+                          {
+                            return Theme(data: ThemeData.dark(), child: child);
+                          }
                             )
                     .then((date)
                       {
@@ -137,5 +161,29 @@ class _TaskReadState extends State<TaskRead> {
         ],
       ),
     );
+  }
+
+  DateTime getDate(DateTime t)
+  {
+    if(DateTime.now().compareTo(t)==0)
+    {
+      setState(() {
+        _dateTime=t;
+        return _dateTime;
+      });
+    }
+    else{
+      setState(() {
+        _dateTime = DateTime.now();
+        return _dateTime;
+      });
+    }
+  }
+
+  void addTask() async
+  {
+    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: type,userID: value.pseudo);
+    await db.addTask(task1);
+    print("Successful");
   }
 }

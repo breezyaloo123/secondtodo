@@ -1,69 +1,64 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
-import 'package:todo1/services/data.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 
-class LocationServices {
-  UserLocation userLocation;
+class LocationPage extends StatefulWidget {
+  @override
+  _LocationPageState createState() => _LocationPageState();
+}
 
-  Location location = Location();
+class _LocationPageState extends State<LocationPage> {
+      final Geolocator geolocator= Geolocator()..forceAndroidLocationManager;
+  Position position;
+  String address;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Location"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            position!=null?Text(address):Text(""),
+            RaisedButton(
+              child: Text("data"),
+              onPressed: ()
+            {
+              getLocation();
+            })
+          ],
+        ),
+      ),
+    );
+  }
 
-  StreamController<UserLocation> streamController = 
-  StreamController<UserLocation>.broadcast(); 
-  double time;
-
-  LocationServices()
+  void getLocation()
   {
-    location.requestPermission().then((granted)
+    geolocator.getLastKnownPosition(desiredAccuracy: LocationAccuracy.best).
+    then((Position pp)
     {
-      if(granted)
-      {
-        
-        location.onLocationChanged().listen((data)
-        {
-          
-          if (data!=null) {
-            
-            streamController.add(UserLocation(longitude: data.longitude,latitude: data.latitude));
-          }
-        });
-      }
+      setState(() {
+        position=pp;
+      });
+      getAddress();
+    }).catchError((e)
+    {
+      print(e);
     });
   }
 
-  Stream<UserLocation> get stream => streamController.stream;
-
-  Future<UserLocation> getLocation() async 
+  void getAddress() async
   {
     try {
-      var currentLocation = await location.getLocation();
-      userLocation = UserLocation(longitude: currentLocation.longitude,latitude: currentLocation.latitude);
+      List<Placemark> p= await geolocator.placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place=p[0];
+      setState(() {
+        address = "${place.subLocality},${place.locality},${place.country}";
+      });
     } catch (e) {
-      print("verify your connexion $e");
+      print(e);
     }
-
-    return userLocation;
   }
-
-  Future<double> getTime() async
-  {
-    await location.requestPermission().then((granted)
-    {
-      if(granted)
-      {
-        
-        location.onLocationChanged().listen((timee)
-        {
-          
-          if (timee!=null) {
-                  time= timee.time;
-          }
-        });
-      }
-    });
-
-    return time;
-  }
-  
 }

@@ -41,6 +41,7 @@ set pwd(String password){ this.password = password;}
     map["image"] = image;
     return map;
   }
+  
   //Constructor which fetch data from the DB
   // User.fromMap(Map<String, dynamic> json)
   //   :id = json[DatabaseHelper.columnId],

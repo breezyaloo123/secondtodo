@@ -1,54 +1,97 @@
 
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo1/services/data.dart';
-import 'package:todo1/services/lacation_services.dart';
+import 'package:todo1/connection/login.dart';
+import 'package:todo1/models/otherinfo.dart';
 import 'package:todo1/tasks/coding.dart';
 import 'package:todo1/tasks/sport.dart';
 import 'package:todo1/tasks/movie.dart';
 import '../tasks/read.dart';
-import 'package:location/location.dart';
-
+import 'package:intl/intl.dart';
+import 'globalThing.dart' as value;
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 class HomeApp extends StatefulWidget {
 
-  String way;
-  HomeApp({Key key, @required this.way}) : super(key: key);
+ 
   @override
-  _HomeAppState createState() => _HomeAppState(way: this.way);
+  _HomeAppState createState() => _HomeAppState();
 }
 
 class _HomeAppState extends State<HomeApp> {
   
-  String way;
-  _HomeAppState({this.way});
-
-  //var file = new File('way');
-  SharedPreferences preferences;
-
-  double time;
-
-  LocationServices a;
-
+  final Geolocator geolocator= Geolocator()..forceAndroidLocationManager;
+  Position position;
+  String address;
+  String username1=value.username;
+  var temp;
+  
 
   
 
+ //var file = new File('way');
 
-  getHour() 
+ 
+
+
+  String type1="READ";
+  String type2="SPORT";
+  String type3="MOVIES";
+  String type4="CODING";
+
+  TimeOfDay timeOfDay = new TimeOfDay.now();
+  TimeOfDay timeOfDay1;
+  String usernamee;
+  String formatTimeOfDay(TimeOfDay time)
   {
-    setState(() async{
-    time = await a.getTime();      
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat.jm();
+    return format.format(dt);
+  }
+
+
+ DateFormat aa;
+ static DateTime dateTime;
+
+var time;
+
+
+  void getHour() 
+  {
+    setState(() {
+      aa = new DateFormat("HH:mm");
+      
+      dateTime.toLocal();
+      print(dateTime.toLocal());
     });
 
   }
   @override
-  void initState(){
+  void initState() {
     super.initState();
     //getimage();
     //print(way.toString());
-
+    setState(() {
+     var ab = DateTime.now();
+     time = ab.hour.toString()+":"+ab.minute.toString();
+     print(time);
+    //  SharedPreferences prefs= await SharedPreferences.getInstance();
+    //  usernamee= prefs.getString('username');
+    });
+    if(position!=null)
+    {
+      getLocation();
+    }
+ 
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +164,14 @@ class _HomeAppState extends State<HomeApp> {
        elevation: 0.0,
        leading: Icon(Icons.menu),
        actions: <Widget>[
-         Icon(Icons.exit_to_app),
+         IconButton(icon: Icon(Icons.exit_to_app), 
+         onPressed:() async
+         {
+           SharedPreferences preferences= await SharedPreferences.getInstance();
+           await preferences.setBool('connect', false);
+           
+           Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+         } )
        ],
      ),
      body: Column(
@@ -134,16 +184,16 @@ class _HomeAppState extends State<HomeApp> {
                 height: 100,
                 width: 100,
                 child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/login.png"),
+                  backgroundImage:AssetImage("assets/login.png"),
                 ),
                  ),
              ),
-             Text("HH:MM"),
+             Text(time.toString()),
            ],
          ),
          Padding(
            padding: const EdgeInsets.only(right: 40.0),  
-           child: Text("Hello ,"+way.toString(),style: TextStyle(
+           child: Text("Hello , " ,style: TextStyle(
              color: Colors.white,
              fontSize: 20.0,
              fontStyle: FontStyle.italic,
@@ -163,11 +213,9 @@ class _HomeAppState extends State<HomeApp> {
             child: Row(
               children: <Widget>[
                 Icon(Icons.location_on),
-                Text("Sicap Dieuppeul1",
-                style: TextStyle(
+                position!=null?Text(address, style: TextStyle(
                   color: Colors.white,
-                ),
-                ),
+                )):Text(""),
               ],
             ),
           ),
@@ -186,37 +234,43 @@ class _HomeAppState extends State<HomeApp> {
                   SizedBox(width: 10.0),
                   Padding(
                     padding:const EdgeInsets.all(8.0),
-                    child: Container(
-                      child: Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24.0),
-                      shadowColor: Color(0x802196F3),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.school,color:Colors.blue,),
-                              ),
-                              Padding(
-                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more_vert), 
-                                )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
-                            child: Text("1 Task restants"),
-                          ),
-                          Padding(
-                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
-                            child: Text("READ"), 
-                            )
-                        ],
-                      ),                        
+                    child: GestureDetector(
+                      onTap: ()
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllTasks()));
+                      },
+                      child: Container(
+                        child: Material(
+                        color: Colors.white,
+                        elevation: 14.0,
+                        borderRadius: BorderRadius.circular(24.0),
+                        shadowColor: Color(0x802196F3),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.school,color:Colors.blue,),
+                                ),
+                                Padding(
+                                  padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.more_vert), 
+                                  )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                              child: Text("1 Task restants"),
+                            ),
+                            Padding(
+                              padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                              child: Text("READ"), 
+                              )
+                          ],
+                        ),                        
+                        ),
                       ),
                     ),
                   ),
@@ -338,5 +392,43 @@ class _HomeAppState extends State<HomeApp> {
        ],
      )
     );
+  }
+//methid which get the localisation
+   void getLocation()
+  {
+    geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best).
+    then((Position pp)
+    {
+      setState(() {
+        position=pp;
+      });
+      getAddress();
+    }).catchError((e)
+    {
+      print(e);
+    });
+  }
+  //method whiche translate the coordinates into an address
+   void getAddress() async
+  {
+    try {
+      List<Placemark> p= await geolocator.placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place=p[0];
+      setState(() {
+        address = "${place.subLocality},${place.locality},${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //get the temperature
+
+    void getTemp() async
+  {
+    var response = await http.get("https://samples.openweathermap.org/data/2.5/weather?q=Dakar&appid=cdb3fafadc8c3e51b26442472ce85574");
+    var dd=json.decode(response.body);
+    temp=dd["main"]['temp'];
+    print(temp);
   }
 }

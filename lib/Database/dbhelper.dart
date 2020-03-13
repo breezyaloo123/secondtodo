@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo1/models/task.dart';
 import '../models/user.dart';
 
 
@@ -12,6 +13,7 @@ class DbHelper {
   // static final DbHelper instance = DbHelper._privateConstructor();
   static Database _database;
   static final table = 'todo';
+  static final tache='tache';
   //  factory DbHelper ()
   //  {
   //    return instance;
@@ -47,6 +49,15 @@ class DbHelper {
       password TEXT,
       image TEXT)
     ''');
+    db.execute('''
+    CREATE TABLE $tache(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      type TEXT,
+      nom TEXT,
+      datedeb TEXT,
+      datefin TEXT,
+      userID TEXT)
+    ''');
     print("Database was created");
   }
 //method which add data to the database
@@ -56,6 +67,13 @@ class DbHelper {
     //When a UNIQUE constraint violation occurs, 
     //the pre-existing rows that are causing the constraint violation are removed prior to inserting or updating the current row.
     return todoU.insert('$table', user.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+  //Method which add a task
+  Future<int> addTask(Task task) async
+  {
+    var taskU= await db;
+
+    return taskU.insert('$tache', task.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
   }
   
 //method which get the photo
@@ -75,7 +93,7 @@ Future<String> fetchUser1(String username, String password) async
       //print(i.values.elementAt(3)+ " "+i.values.elementAt(4) + " "+i.values.elementAt(5));
       if((i.values.elementAt(3) == username) && (i.values.elementAt(4) == password))
       {
-        res= i.values.elementAt(1)+" "+i.values.elementAt(2);
+        res=i.values.elementAt(5);
         return res;
       }
     }
@@ -83,13 +101,24 @@ Future<String> fetchUser1(String username, String password) async
   return null;
 }
 
-Future<List<Map<String,dynamic>>> aa(String username, String password) async
+Future<List<Map<String,dynamic>>> fetchUser2(String username, String password) async
 {
   var todoU = await db;
   final Future<List<Map<String, dynamic>>> futureMaps = todoU.query('$table');
 
   return futureMaps;
 }
+//Fetch the tasks
+
+Future<List<Map<String,dynamic>>> fetchTask() async
+{
+  var todoU = await db;
+  final Future<List<Map<String, dynamic>>> futureMaps = todoU.query('$tache');
+
+  return futureMaps;
+}
+
+
 //method which read data
 Future<bool> fetchUser(String username, String password) async
 {

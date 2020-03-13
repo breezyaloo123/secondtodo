@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signin.dart';
 import '../Database/dbhelper.dart';
 //import '../models/user.dart';
 import '../models/home.dart';
 import '../models/date_picker.dart';
+import '../models/globalThing.dart' as value;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,11 +13,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String toff;
   bool userVal;
   String username;
   String password;
   String image;
   String name;
+  bool checked=false;
   var db = DbHelper();
   final _scaffold = GlobalKey<ScaffoldState>();
   @override
@@ -80,17 +84,24 @@ class _LoginPageState extends State<LoginPage> {
                   // fetchData();
                   // //var name = await db.fetchUser1(username,password);
                   // print(name);
+
+                  
+                  
                   fetchUser();
+                  //toff=await db.fetchUser1(username, password);
                   
                 },
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text("Creer un compte en cliquant "),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text("Creer un compte en cliquant "),
+                    ),
                     IconButton(icon: Icon(Icons.add_to_home_screen), onPressed:()
                         {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
@@ -106,6 +117,18 @@ class _LoginPageState extends State<LoginPage> {
                 //   },
                 // )
               ],
+            ),
+            Row(
+              
+              children: <Widget>[
+                Checkbox(value: checked ,onChanged: (value)
+                {
+                  setState(() {
+                    checked=!checked;
+                  });
+                }),
+                Text("Se Souvenir de moi"),
+              ],
             )
             
           ],
@@ -118,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
  void fetchUser() async
 {
 
-  var maps = await db.aa(username, password);
+  var maps = await db.fetchUser2(username, password);
 
   if(maps.length != 0)
   {
@@ -128,13 +151,30 @@ class _LoginPageState extends State<LoginPage> {
       print(i.values.elementAt(3)+ " "+i.values.elementAt(4) + " "+i.values.elementAt(5));
       if((i.values.elementAt(3) == username) && (i.values.elementAt(4) == password))
       {
-        name=i.values.elementAt(1)+" "+i.values.elementAt(2);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp(way:name)));
         
+        setState(() {
+          value.username =i.values.elementAt(1);
+          value.pathImage = i.values.elementAt(5);
+          value.pseudo=i.values.elementAt(3);
+        });
+
+        SharedPreferences preferences= await SharedPreferences.getInstance();
+
+        await preferences.setString('username', i.values.elementAt(1).toString());
+
+        if(checked==true)
+        {
+          await preferences.setBool('connect', true);
+        }
+        else
+        {
+          await preferences.setBool('connect', false);
+        }
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeApp()));
       }
       else
       {
-          _snackbar();
+        _snackbar();
       }
     }
   }

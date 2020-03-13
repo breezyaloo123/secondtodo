@@ -7,6 +7,7 @@ import '../Database/dbhelper.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/home.dart';
+import '../models/globalThing.dart' as value;
 
 class Signin extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _SigninState extends State<Signin> {
   String password1;
  
   var image;
+  String path;
   final db = DbHelper();
   bool ischecked = false;
   final _final = GlobalKey<FormState>();
@@ -35,16 +37,17 @@ class _SigninState extends State<Signin> {
   Future getImage() async
   {
    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-   print (image);
+   path = image.path;
+   print (path);
   Directory directory= await getApplicationDocumentsDirectory();
-  final String path = directory.path;
-  final String filename = basename(path);
-  final File localImage= await image.copy('$path/$filename');
-  test = '$path/$filename';
+  final String pathh = directory.path;
+  final String filename = basename(pathh);
+  //final File localImage= await image.copy('$path/$filename');
+  test = '$pathh/$filename';
   pref = await SharedPreferences.getInstance();
   pref.setString('test', test);
   way = pref.getString('test');
-  print(localImage);
+  //print(localImage);
   print(filename);
    setState(() {
      _image = image;
@@ -76,7 +79,7 @@ class _SigninState extends State<Signin> {
                   Row(
                     children: <Widget>[
                       Container(
-                        child: ClipRRect(
+                        child: ClipRRect( 
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           child: _image == null?
                           Text("No Image"):
@@ -181,27 +184,27 @@ class _SigninState extends State<Signin> {
                       {
                         //User user = new User(prenom,nom,pseudo,password,image.toString());
                         insert();
-                         String name = prenom +" "+nom;
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp(way: name,)));
+                         value.pathImage = path;
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
                       }
                     },
                   ),
                 ),
-                Row(
-                  children: <Widget>[
-                    Checkbox(
-                      value: ischecked,
-                      onChanged: (value)
-                      {
-                        setState(() {
-                          ischecked = ! ischecked;
-                        });
-                      },
-                    ),
-                    Text("Se souvenir de moi"),
-                    Icon(Icons.restore)
-                  ],
-                )
+                // Row(
+                //   children: <Widget>[
+                //     Checkbox(
+                //       value: ischecked,
+                //       onChanged: (value)
+                //       {
+                //         setState(() {
+                //           ischecked = ! ischecked;
+                //         });
+                //       },
+                //     ),
+                //     Text("Se souvenir de moi"),
+                //     Icon(Icons.restore)
+                //   ],
+                // )
                 ]
               ),
             )
@@ -212,7 +215,7 @@ class _SigninState extends State<Signin> {
 void insert() async
 {
   
-  User aa= User(prenom,nom,pseudo,password,_image.toString());
+  User aa= User(prenom,nom,pseudo,password,path);
   await db.addTodo(aa);
   //setupList();
   /*
