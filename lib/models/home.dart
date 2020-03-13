@@ -7,13 +7,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo1/connection/login.dart';
 import 'package:todo1/models/otherinfo.dart';
-import 'package:todo1/tasks/coding.dart';
-import 'package:todo1/tasks/sport.dart';
-import 'package:todo1/tasks/movie.dart';
 import '../tasks/read.dart';
 import 'package:intl/intl.dart';
 import 'globalThing.dart' as value;
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 class HomeApp extends StatefulWidget {
@@ -43,9 +39,21 @@ class _HomeAppState extends State<HomeApp> {
   String type2="SPORT";
   String type3="MOVIES";
   String type4="CODING";
+  String val;
 
   TimeOfDay timeOfDay = new TimeOfDay.now();
   TimeOfDay timeOfDay1;
+  Future<Null> selectTime(BuildContext context) async
+  {
+    timeOfDay1= await showTimePicker(context: context
+    , 
+    initialTime: timeOfDay);
+
+    setState(() {
+      timeOfDay=timeOfDay1;
+      print(timeOfDay);
+    });
+  }
   String usernamee;
   String formatTimeOfDay(TimeOfDay time)
   {
@@ -122,7 +130,8 @@ var time;
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead()));
+              val="READ";
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
             }
           ),
           SpeedDialChild(
@@ -132,7 +141,8 @@ var time;
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Sport()));
+              val="SPORT";
+             Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
             }
           ),
           SpeedDialChild(
@@ -142,7 +152,8 @@ var time;
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>Movie()));
+              val="MOVIES";
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
 
             }
           ),
@@ -153,7 +164,8 @@ var time;
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Coding()));
+              val="CODING";
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
             }
           ),
         ],
@@ -188,7 +200,7 @@ var time;
                 ),
                  ),
              ),
-             Text(time.toString()),
+             Text(""+timeOfDay.hour.toString()+":"+timeOfDay.minute.toString()),
            ],
          ),
          Padding(

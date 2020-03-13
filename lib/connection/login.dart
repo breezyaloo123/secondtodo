@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
 
         SharedPreferences preferences= await SharedPreferences.getInstance();
 
-        await preferences.setString('username', i.values.elementAt(1).toString());
+        //await preferences.setString('username', i.values.elementAt(1).toString());
 
         if(checked==true)
         {

@@ -4,12 +4,16 @@ import 'package:todo1/models/task.dart';
 import '../models/globalThing.dart' as value;
 
 class TaskRead extends StatefulWidget {
+  String val;
+  TaskRead({Key key,@required this.val}):super(key:key);
 
   @override
-  _TaskReadState createState() => _TaskReadState();
+  _TaskReadState createState() => _TaskReadState(val: this.val);
 }
 
 class _TaskReadState extends State<TaskRead> {
+  String val;
+  _TaskReadState({this.val});
     DateTime _dateTime;
     DateTime _dateTime1;
     DateTime deb;
@@ -32,7 +36,7 @@ class _TaskReadState extends State<TaskRead> {
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
-        title: Text("READ"),
+        title: Text(val),
         elevation: 0.0,
         centerTitle: true,
         actions: <Widget>[
@@ -182,7 +186,7 @@ class _TaskReadState extends State<TaskRead> {
 
   void addTask() async
   {
-    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: type,userID: value.pseudo);
+    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,userID: value.pseudo);
     await db.addTask(task1);
     print("Successful");
   }
