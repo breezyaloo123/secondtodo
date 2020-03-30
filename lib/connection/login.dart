@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         
         setState(() {
           value.username =i.values.elementAt(1);
-          value.pathImage = i.values.elementAt(5);
+          //value.pathImage = i.values.elementAt(5);
           value.pseudo=i.values.elementAt(3);
         });
 

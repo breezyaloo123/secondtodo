@@ -56,7 +56,8 @@ class DbHelper {
       nom TEXT,
       datedeb TEXT,
       datefin TEXT,
-      userID TEXT)
+      userID TEXT,
+      val bool)
     ''');
     print("Database was created");
   }

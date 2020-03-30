@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo1/Database/dbhelper.dart';
+import 'package:todo1/models/task.dart';
 
 class AllTasks extends StatefulWidget {
   @override
@@ -8,28 +9,24 @@ class AllTasks extends StatefulWidget {
 
 class _AllTasksState extends State<AllTasks> {
   var db = new DbHelper();
-  String val;
-  bool taskVal = false;
-  List<Map<String, dynamic>> map = new List<Map<String, dynamic>>();
-  List<String> tt = new List<String>();
-  @override
-  void initState() {
-    super.initState();
-   
-  }
-  showTask() async
+
+  List<Task> test= new List<Task>();
+
+showTask() async
 {
   var res = await db.fetchTask();
   
   for(var i in res)
   {
-   // map.add(i);
-    //map[0].values.elementAt(2);
+   
+    print(i);
     print(i.values.elementAt(2));
-    tt.add(i.values.elementAt(2));
-    val=i.values.elementAt(2);
+    test.add(new Task(task: i.values.elementAt(2),datedeb: i.values.elementAt(3),dateFin: i.values.elementAt(4),
+    type: i.values.elementAt(1),userID: "",val: false));
+
   }
-  
+
+  return 0;
 }
   @override
   Widget build(BuildContext context) {
@@ -56,11 +53,11 @@ class _AllTasksState extends State<AllTasks> {
           {
             return Center(
               child: CircularProgressIndicator(
+                
                 backgroundColor: Colors.green,
               ),
             );
           }
-        
       }),
       
     );
@@ -69,7 +66,7 @@ class _AllTasksState extends State<AllTasks> {
   Widget listview()
   {
     return ListView.builder(
-        itemCount: tt.length,
+        itemCount: test.length,
         itemBuilder: (BuildContext context,int position)
         {
           return show(position);
@@ -80,15 +77,25 @@ class _AllTasksState extends State<AllTasks> {
 
 Widget show(int position)
 {
-  //showTask();
-  return ListTile(
-    leading: Text(tt[position].toString()),
-    trailing: Checkbox(value: taskVal, onChanged: (value)
+  
+  return Card(
+    elevation: 5.0,
+    margin: EdgeInsets.symmetric(
+      vertical: 5.0,
+      horizontal: 10.0,
+    ),
+    child: Container(
+      padding: EdgeInsets.all(5.0),
+      child: ListTile(
+    leading: Text(test[position].task),
+    trailing: Checkbox(value: test[position].val, onChanged: (value)
     {
       setState(() {
-       taskVal= !taskVal;
+       test[position].val = ! test[position].val;
       });
     }),
+  ),
+    ),
   );
 }
 

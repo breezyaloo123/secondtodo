@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo1/Database/dbhelper.dart';
 import 'package:todo1/connection/login.dart';
 import 'package:todo1/models/otherinfo.dart';
 import '../tasks/read.dart';
@@ -26,33 +27,41 @@ class _HomeAppState extends State<HomeApp> {
   String address;
   String username1=value.username;
   var temp;
+  String temp1;
+  String type="READ";
+  var ll;
   
-
+var db= new DbHelper();
   
-
+var res;
  //var file = new File('way');
 
+int counter=0;
  
-
-
-  String type1="READ";
-  String type2="SPORT";
-  String type3="MOVIES";
-  String type4="CODING";
   String val;
 
   TimeOfDay timeOfDay = new TimeOfDay.now();
   TimeOfDay timeOfDay1;
+  String locality;
+  Widget aloo;
   Future<Null> selectTime(BuildContext context) async
   {
-    timeOfDay1= await showTimePicker(context: context
-    , 
+    timeOfDay1= await showTimePicker(context: context, 
     initialTime: timeOfDay);
-
     setState(() {
       timeOfDay=timeOfDay1;
       print(timeOfDay);
+     aloo =Text(""+timeOfDay.toString());
     });
+  
+  }
+
+  Widget hour()
+  {
+    setState(() {
+      aloo=Text(""+timeOfDay.minute.toString());
+    });
+    return aloo;
   }
   String usernamee;
   String formatTimeOfDay(TimeOfDay time)
@@ -83,6 +92,7 @@ var time;
   @override
   void initState() {
     super.initState();
+    printTask();
     //getimage();
     //print(way.toString());
     setState(() {
@@ -200,7 +210,8 @@ var time;
                 ),
                  ),
              ),
-             Text(""+timeOfDay.hour.toString()+":"+timeOfDay.minute.toString()),
+             //hour(),
+             //Text(""+timeOfDay.hour.toString()+":"+timeOfDay.minute.toString()),
            ],
          ),
          Padding(
@@ -273,12 +284,16 @@ var time;
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 150.0,top: 45.0),
-                              child: Text("1 Task restants"),
+                              padding: const EdgeInsets.only(right: 150.0,top: 20.0),
+                              child: Text("$counter Task restants"),
                             ),
                             Padding(
-                              padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                              padding:EdgeInsets.only(right: 200.0,top: 12.0),
                               child: Text("READ"), 
+                              ),
+                              Padding(
+                              padding:EdgeInsets.only(right: 150.0,top: 4.0),
+                              child: Text(ll.toString()), 
                               )
                           ],
                         ),                        
@@ -428,6 +443,7 @@ var time;
       Placemark place=p[0];
       setState(() {
         address = "${place.subLocality},${place.locality},${place.country}";
+        locality=place.locality;
       });
     } catch (e) {
       print(e);
@@ -438,9 +454,27 @@ var time;
 
     void getTemp() async
   {
-    var response = await http.get("https://samples.openweathermap.org/data/2.5/weather?q=Dakar&appid=cdb3fafadc8c3e51b26442472ce85574");
-    var dd=json.decode(response.body);
-    temp=dd["main"]['temp'];
+    var response = await http.get("https://samples.openweathermap.org/data/2.5/weather?q=$locality&appid=cdb3fafadc8c3e51b26442472ce85574");
+    var data=json.decode(response.body);
+    temp=data["main"]['temp'];
+    setState(() {
+      temp1=temp;
+    });
     print(temp);
+  }
+
+  printTask() async
+  {
+    var rr= await db.fetchTask();
+
+    for(var i in rr)
+    {
+      if(type==i.values.elementAt(1))
+      {
+        ll=i.values.elementAt(2);
+        counter++;
+      }
+    }
+   // return ll;
   }
 }

@@ -16,7 +16,7 @@ class _TaskReadState extends State<TaskRead> {
   _TaskReadState({this.val});
     DateTime _dateTime;
     DateTime _dateTime1;
-    DateTime deb;
+    Future<DateTime> deb;
     String task;
     String pseudo;
     String nn;
@@ -77,10 +77,11 @@ class _TaskReadState extends State<TaskRead> {
                     IconButton(icon: Icon(Icons.add_alarm),
                     onPressed: () async
                     {
-                        deb=await showDatePicker(
+                        await showDatePicker(
                           context: context, 
                           initialDate: _dateTime==null? DateTime.now():_dateTime, 
-                          firstDate: DateTime.now(),
+
+                          firstDate: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day),
                           lastDate: DateTime(2222),
                           builder: (BuildContext context, Widget child)
                           {
@@ -94,7 +95,9 @@ class _TaskReadState extends State<TaskRead> {
                           
                           
                       });
+                      
                       });
+                      
                     }),
                     Text("Debut"),
                   ],
@@ -127,8 +130,8 @@ class _TaskReadState extends State<TaskRead> {
                       {
                         await showDatePicker(
                           context: context, 
-                          initialDate: _dateTime1==null? DateTime.now():_dateTime1, 
-                          firstDate: deb,
+                          initialDate: _dateTime1==null? _dateTime:_dateTime1, 
+                          firstDate: _dateTime,
                           lastDate: DateTime(2222),
                           builder: (BuildContext context, Widget child)
                           {
@@ -186,7 +189,7 @@ class _TaskReadState extends State<TaskRead> {
 
   void addTask() async
   {
-    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,userID: value.pseudo);
+    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,userID: value.pseudo,val: false);
     await db.addTask(task1);
     print("Successful");
   }
