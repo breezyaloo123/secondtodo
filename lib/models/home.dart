@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo1/Database/dbhelper.dart';
 import 'package:todo1/connection/login.dart';
 import 'package:todo1/models/otherinfo.dart';
+import 'package:todo1/models/test.dart';
 import '../tasks/read.dart';
 import 'package:intl/intl.dart';
 import 'globalThing.dart' as value;
@@ -25,7 +27,7 @@ class _HomeAppState extends State<HomeApp> {
   final Geolocator geolocator= Geolocator()..forceAndroidLocationManager;
   Position position;
   String address;
-  String username1=value.username;
+  String username1=value.pseudo;
   var temp;
   String temp1;
   String type="READ";
@@ -44,64 +46,38 @@ int counter=0;
   TimeOfDay timeOfDay1;
   String locality;
   Widget aloo;
-  Future<Null> selectTime(BuildContext context) async
-  {
-    timeOfDay1= await showTimePicker(context: context, 
-    initialTime: timeOfDay);
-    setState(() {
-      timeOfDay=timeOfDay1;
-      print(timeOfDay);
-     aloo =Text(""+timeOfDay.toString());
-    });
-  
-  }
+ 
 
-  Widget hour()
-  {
-    setState(() {
-      aloo=Text(""+timeOfDay.minute.toString());
-    });
-    return aloo;
-  }
+
   String usernamee;
-  String formatTimeOfDay(TimeOfDay time)
-  {
-    final now = new DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    final format = DateFormat.jm();
-    return format.format(dt);
-  }
+
 
 
  DateFormat aa;
  static DateTime dateTime;
 
 var time;
-
-
-  void getHour() 
-  {
-    setState(() {
-      aa = new DateFormat("HH:mm");
-      
-      dateTime.toLocal();
-      print(dateTime.toLocal());
-    });
-
-  }
+String hour;
+DateTime dd;
+ 
   @override
   void initState() {
     super.initState();
-    printTask();
-    //getimage();
-    //print(way.toString());
+    //
+    Timer.periodic(Duration(seconds: 1), (Timer t)
+        {
+          setState(() {
+            dd=DateTime.now();
+            hour=DateFormat('kk:mm\nEEE d MMM').format(dd);
+          });
+          
+        });
+    
     setState(() {
-     var ab = DateTime.now();
-     time = ab.hour.toString()+":"+ab.minute.toString();
-     print(time);
-    //  SharedPreferences prefs= await SharedPreferences.getInstance();
-    //  usernamee= prefs.getString('username');
-    });
+
+      printTask();
+      
+      });
     if(position!=null)
     {
       getLocation();
@@ -195,6 +171,7 @@ var time;
            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
          } )
        ],
+
      ),
      body: Column(
        children: <Widget>[
@@ -210,8 +187,7 @@ var time;
                 ),
                  ),
              ),
-             //hour(),
-             //Text(""+timeOfDay.hour.toString()+":"+timeOfDay.minute.toString()),
+             Text(hour.toString()),
            ],
          ),
          Padding(
@@ -224,7 +200,7 @@ var time;
          ),
           Padding(
             padding: const EdgeInsets.only(right: 20.0,top: 10.0),
-            child: Text("Vous avez 2 taches prevues aujourd'hui",
+            child: Text("Vous avez $counter taches prevues aujourd'hui",
             style: TextStyle(
               color: Colors.white,
               
@@ -326,13 +302,17 @@ var time;
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
-                            child: Text("1 Task restants"),
+                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
+                            child: Text("$counter Task restants"),
                           ),
                           Padding(
                             padding:EdgeInsets.only(right: 200.0,top: 10.0),
                             child: Text("READ"), 
-                            )
+                            ),
+                            Padding(
+                            padding:EdgeInsets.only(right: 150.0,top: 4.0),
+                            child: Text(ll.toString()), 
+                            ),
                         ],
                       ),                        
                       ),
@@ -363,11 +343,15 @@ var time;
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
                             child: Text("1 Task restants"),
                           ),
                           Padding(
                             padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            ),
+                            Padding(
+                            padding:EdgeInsets.only(right: 150.0,top: 14.0),
                             child: Text("READ"), 
                             )
                         ],
@@ -400,11 +384,16 @@ var time;
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 45.0),
+                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
                             child: Text("1 Task restants"),
                           ),
                           Padding(
                             padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                            child: Text("READ"), 
+                            
+                            ),
+                            Padding(
+                            padding:EdgeInsets.only(right: 166.0,top: 5.0),
                             child: Text("READ"), 
                             )
                         ],
@@ -443,6 +432,7 @@ var time;
       Placemark place=p[0];
       setState(() {
         address = "${place.subLocality},${place.locality},${place.country}";
+        print(address);
         locality=place.locality;
       });
     } catch (e) {
@@ -469,12 +459,12 @@ var time;
 
     for(var i in rr)
     {
-      if(type==i.values.elementAt(1))
-      {
-        ll=i.values.elementAt(2);
-        counter++;
-      }
+        setState(() {
+          counter++;
+          ll=i.values.elementAt(2);
+        });
+      
     }
-   // return ll;
+  
   }
 }

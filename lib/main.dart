@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'welcome.dart';
 import 'connection/login.dart';
 import 'models/home.dart';
-import './services/lacation_services.dart';
-import './services/data.dart';
+import 'package:flutter/services.dart';
 
-void main() async
+
+
+Future<void> main() async
 {
+  
   //TestWidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   Widget test;
@@ -21,7 +22,7 @@ void main() async
   {
     test=LoginPage();
   }
-  
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home:test,

@@ -4,7 +4,7 @@ import 'package:todo1/models/task.dart';
 import '../models/globalThing.dart' as value;
 
 class TaskRead extends StatefulWidget {
-  String val;
+  final String val;
   TaskRead({Key key,@required this.val}):super(key:key);
 
   @override
@@ -170,22 +170,22 @@ class _TaskReadState extends State<TaskRead> {
     );
   }
 
-  DateTime getDate(DateTime t)
-  {
-    if(DateTime.now().compareTo(t)==0)
-    {
-      setState(() {
-        _dateTime=t;
-        return _dateTime;
-      });
-    }
-    else{
-      setState(() {
-        _dateTime = DateTime.now();
-        return _dateTime;
-      });
-    }
-  }
+  // DateTime getDate(DateTime t)
+  // {
+  //   if(DateTime.now().compareTo(t)==0)
+  //   {
+  //     setState(() {
+  //       _dateTime=t;
+  //       return _dateTime;
+  //     });
+  //   }
+  //   else{
+  //     setState(() {
+  //       _dateTime = DateTime.now();
+  //       return _dateTime;
+  //     });
+  //   }
+  // }
 
   void addTask() async
   {

@@ -12,17 +12,27 @@ class _AllTasksState extends State<AllTasks> {
 
   List<Task> test= new List<Task>();
 
+  bool val=false;
+
+  
+
+  
+  
+
+  
+
 showTask() async
 {
+  
   var res = await db.fetchTask();
   
+test.clear(); 
   for(var i in res)
   {
-   
-    print(i);
-    print(i.values.elementAt(2));
+
     test.add(new Task(task: i.values.elementAt(2),datedeb: i.values.elementAt(3),dateFin: i.values.elementAt(4),
     type: i.values.elementAt(1),userID: "",val: false));
+    
 
   }
 
@@ -67,9 +77,9 @@ showTask() async
   {
     return ListView.builder(
         itemCount: test.length,
-        itemBuilder: (BuildContext context,int position)
+        itemBuilder: (BuildContext context,int index)
         {
-          return show(position);
+          return show(index);
         });
   }
 
@@ -79,6 +89,7 @@ Widget show(int position)
 {
   
   return Card(
+    color: Colors.cyan,
     elevation: 5.0,
     margin: EdgeInsets.symmetric(
       vertical: 5.0,
@@ -88,10 +99,17 @@ Widget show(int position)
       padding: EdgeInsets.all(5.0),
       child: ListTile(
     leading: Text(test[position].task),
-    trailing: Checkbox(value: test[position].val, onChanged: (value)
+    trailing: Checkbox(value:false, onChanged: (value)
     {
+      
       setState(() {
-       test[position].val = ! test[position].val;
+        
+        
+        print(position);
+        print(!test[position].val);
+        //test[position].val=test[position].val;
+
+        
       });
     }),
   ),
