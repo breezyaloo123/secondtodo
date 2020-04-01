@@ -22,6 +22,7 @@ Future<void> main() async
   {
     test=LoginPage();
   }
+  //it forces to the application to only be the specified mode Orienatations
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
