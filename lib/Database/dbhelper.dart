@@ -56,8 +56,7 @@ class DbHelper {
       nom TEXT,
       datedeb TEXT,
       datefin TEXT,
-      userID TEXT,
-      val bool)
+      etat bool)
     ''');
     print("Database was created");
   }
@@ -111,10 +110,33 @@ Future<List<Map<String,dynamic>>> fetchUser2(String username, String password) a
 }
 //Fetch the tasks
 
-Future<List<Map<String,dynamic>>> fetchTask() async
+Future<List<Task>> fetchTask(String typeTask) async
 {
   var todoU = await db;
-  final Future<List<Map<String, dynamic>>> futureMaps = todoU.query('$tache');
+List<Task> task = [];
+  Future<List<Map<String, dynamic>>> futureMaps = todoU.query("$tache");
+  var res = await futureMaps;
+  if(res.length>0)
+  {
+    for (var i in res) {
+      Task t = new Task(task: i.values.elementAt(2),datedeb: i.values.elementAt(3),dateFin: i.values.elementAt(4),
+    type: i.values.elementAt(1),etat: i.values.elementAt(0),val: false);
+      if(i.values.elementAt(1)==typeTask)
+      {
+        task.add(t);
+      }
+    }
+  }
+  return task;
+}
+
+
+
+Future<List<Map<String,dynamic>>> fetchAllTasks() async
+{
+  var todoU = await db;
+  
+  final Future<List<Map<String, dynamic>>> futureMaps = todoU.query("$tache");
 
   return futureMaps;
 }

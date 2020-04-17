@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo1/Database/dbhelper.dart';
 import 'package:todo1/connection/login.dart';
 import 'package:todo1/models/otherinfo.dart';
-import 'package:todo1/models/test.dart';
+import 'package:todo1/models/task.dart';
+import 'package:todo1/tasks/historic.dart';
 import '../tasks/read.dart';
 import 'package:intl/intl.dart';
 import 'globalThing.dart' as value;
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_emoji/flutter_emoji.dart';
 class HomeApp extends StatefulWidget {
 
  
@@ -23,15 +24,16 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
+  var parser = EmojiParser();
   
   final Geolocator geolocator= Geolocator()..forceAndroidLocationManager;
   Position position;
   String address;
-  String username1=value.pseudo;
+  String username1=value.username;
   var temp;
   String temp1;
   String type="READ";
-  var ll;
+  var task;
   
 var db= new DbHelper();
   
@@ -39,8 +41,9 @@ var res;
  //var file = new File('way');
 
 int counter=0;
+int count=0;
  
-  String val;
+String val;
 
   TimeOfDay timeOfDay = new TimeOfDay.now();
   TimeOfDay timeOfDay1;
@@ -50,6 +53,8 @@ int counter=0;
 
 
   String usernamee;
+
+  String nom;
 
 
 
@@ -73,18 +78,96 @@ DateTime dd;
           
         });
     
-    setState(() {
+    
 
-      printTask();
-      
+      setState(() {
+        printTask();
+        
       });
-    if(position!=null)
-    {
-      getLocation();
-    }
- 
+       //if(position!=null)
+       //{
+        setState(() {
+          getLocation();
+          getTemp();
+        }); 
+      //}
+      
   }
 
+   void getData(String typeTask) async
+
+    {
+      
+        List<Task> listTask = new List<Task>();
+        var bd = await DbHelper().db;
+        var ll = await bd.query("tache");
+        print(ll);
+        
+        for (var i = 0; i < ll.length; i++) {
+        if(ll[i]["etat"]==0)
+            {
+              if(ll[i]["type"]==typeTask)
+              {
+                
+                Task t = new Task(id: ll[i]["id"],task: ll[i]["nom"],val: false);
+                listTask.add(t);
+                
+               // task=ll[i]["nom"];
+                print(ll[i]["nom"]);
+              }
+            }
+          }
+        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> AllTasks(listTask)));
+    }
+
+   Future<String> showDialogg(BuildContext context)
+    {
+      TextEditingController mycontrolller = TextEditingController();
+      return showDialog(context: context,
+      barrierDismissible: false,
+        builder: (context) => new CupertinoAlertDialog(
+        title: Text("Veuillez donner le type de Tache"),
+        content: Material(
+                  child: TextField(
+            controller: mycontrolller,
+          ),
+        ),
+        actions: <Widget>[
+          CupertinoDialogAction(child: Text("Yes"),onPressed: ()
+          {
+            Navigator.of(context).pop(mycontrolller.text.toUpperCase().toString());
+          },)
+        ],
+              
+      ));
+    }
+
+//method will allow us to check all the tasks which have been done
+   void historic(String typeTask) async
+
+    {
+      
+        List<Task> taskH= new List<Task>();
+        var bd = await DbHelper().db;
+        var ll = await bd.query("tache");
+        print(ll);
+        
+        for (var i = 0; i < ll.length; i++) {
+        if(ll[i]["etat"]==1)
+            {
+              if(ll[i]["type"]==typeTask)
+              {
+                
+                Task t = new Task(id: ll[i]["id"],task: ll[i]["nom"],val: false);
+                taskH.add(t);
+                
+               // task=ll[i]["nom"];
+                print(ll[i]["nom"]);
+              }
+            }
+          }
+        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> TaskHistoric(taskH)));
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +199,8 @@ DateTime dd;
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: ()
             {
+              value.typeTask="READ";
+            
               val="READ";
               Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
             }
@@ -154,6 +239,20 @@ DateTime dd;
               Navigator.push(context, MaterialPageRoute(builder: (context) => TaskRead(val: this.val,)));
             }
           ),
+          SpeedDialChild(
+            child: Icon(Icons.history),
+            backgroundColor: Colors.indigo,
+            label: 'Voir l\'historique de vos taches',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: ()
+            {
+              showDialogg(context).then((onValue)
+              {
+                historic(onValue);
+              }
+              );           
+            }
+          ),
         ],
       ),
      appBar: AppBar(
@@ -168,12 +267,12 @@ DateTime dd;
            SharedPreferences preferences= await SharedPreferences.getInstance();
            await preferences.setBool('connect', false);
            
-           Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
          } )
        ],
 
      ),
-     body: Column(
+     body: ListView(
        children: <Widget>[
          Row(
            children: <Widget>[
@@ -191,15 +290,15 @@ DateTime dd;
            ],
          ),
          Padding(
-           padding: const EdgeInsets.only(right: 40.0),  
-           child: Text("Hello , " ,style: TextStyle(
+           padding: const EdgeInsets.only(left: 100.0),  
+           child: Text("Hello , "+username1.toString()+" "+parser.emojify(':smile:')+parser.emojify(':v:')+parser.emojify(':sunglasses:') ,style: TextStyle(
              color: Colors.white,
              fontSize: 20.0,
              fontStyle: FontStyle.italic,
            ),),
          ),
           Padding(
-            padding: const EdgeInsets.only(right: 20.0,top: 10.0),
+            padding: const EdgeInsets.only(left: 60.0,top: 10.0),
             child: Text("Vous avez $counter taches prevues aujourd'hui",
             style: TextStyle(
               color: Colors.white,
@@ -212,16 +311,19 @@ DateTime dd;
             child: Row(
               children: <Widget>[
                 Icon(Icons.location_on),
-                position!=null?Text(address, style: TextStyle(
+               Text( position==null?"":address.toString(),style: TextStyle(
                   color: Colors.white,
-                )):Text(""),
+                )),
               ],
             ),
           ),
-          Text("20.51 °C",
-          style: TextStyle(
-            fontSize: 20.0,
-          ),),
+          Padding(
+            padding: const EdgeInsets.only(left: 110.0),
+            child: Text(locality ==null?"":temp.toString()+ " °C",
+            style: TextStyle(
+              fontSize: 20.0,
+            ),),
+          ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -236,7 +338,10 @@ DateTime dd;
                     child: GestureDetector(
                       onTap: ()
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllTasks()));
+                        value.typeTask="READ";
+                        val="READ";
+                        countTasks(val);
+                        getData(val);
                       },
                       child: Container(
                         child: Material(
@@ -261,7 +366,7 @@ DateTime dd;
                             ),
                             Padding(
                               padding: const EdgeInsets.only(right: 150.0,top: 20.0),
-                              child: Text("$counter Task restants"),
+                              child: Text("$count Task restants"),
                             ),
                             Padding(
                               padding:EdgeInsets.only(right: 200.0,top: 12.0),
@@ -269,7 +374,7 @@ DateTime dd;
                               ),
                               Padding(
                               padding:EdgeInsets.only(right: 150.0,top: 4.0),
-                              child: Text(ll.toString()), 
+                              child: Text(task.toString()), 
                               )
                           ],
                         ),                        
@@ -280,124 +385,149 @@ DateTime dd;
                   SizedBox(width: 10.0),
                   Padding(
                     padding:const EdgeInsets.all(8.0),
-                    child: Container(
-                      child: Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24.0),
-                      shadowColor: Color(0x802196F3),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.school,color:Colors.blue,),
-                              ),
-                              Padding(
-                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more_vert), 
-                                )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
-                            child: Text("$counter Task restants"),
-                          ),
-                          Padding(
-                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
-                            child: Text("READ"), 
+                    child: GestureDetector(
+                      onTap: ()
+                      {
+                        value.typeTask="CODING";
+                        val="CODING";
+                        countTasks(val);
+                        getData(val);
+                      },
+                      child: Container(
+                        child: Material(
+                         color: Colors.white,
+                        elevation: 14.0,
+                        borderRadius: BorderRadius.circular(24.0),
+                        shadowColor: Color(0x802196F3),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.school,color:Colors.blue,),
+                                ),
+                                Padding(
+                                  padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.more_vert), 
+                                  )
+                              ],
                             ),
                             Padding(
-                            padding:EdgeInsets.only(right: 150.0,top: 4.0),
-                            child: Text(ll.toString()), 
+                              padding: const EdgeInsets.only(right: 150.0,top: 20.0),
+                              child: Text("$count Task restants"),
                             ),
-                        ],
-                      ),                        
+                            Padding(
+                              padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                              child: Text("CODING"), 
+                              ),
+                              Padding(
+                              padding:EdgeInsets.only(right: 150.0,top: 4.0),
+                              child: Text(task.toString()), 
+                              ),
+                          ],
+                        ),                        
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(width: 10.0),
                   Padding(
                     padding:const EdgeInsets.all(8.0),
-                    child: Container(
-                      child: Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24.0),
-                      shadowColor: Color(0x802196F3),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.school,color:Colors.blue,),
-                              ),
-                              Padding(
-                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more_vert), 
-                                )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
-                            child: Text("1 Task restants"),
-                          ),
-                          Padding(
-                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
-                            child: Text("READ"), 
+                    child: GestureDetector(
+                      onTap: ()
+                      {
+                        value.typeTask = "SPORT";
+                        val="SPORT";
+                        getData(val);
+                      },
+                        child: Container(
+                        child: Material(
+                        color: Colors.white,
+                        elevation: 14.0,
+                        borderRadius: BorderRadius.circular(24.0),
+                        shadowColor: Color(0x802196F3),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.school,color:Colors.blue,),
+                                ),
+                                Padding(
+                                  padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.more_vert), 
+                                  )
+                              ],
                             ),
                             Padding(
-                            padding:EdgeInsets.only(right: 150.0,top: 14.0),
-                            child: Text("READ"), 
-                            )
-                        ],
-                      ),                        
+                              padding: const EdgeInsets.only(right: 150.0,top: 20.0),
+                              child: Text("$count Task restants"),
+                            ),
+                            Padding(
+                              padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                              child: Text("SPORT"), 
+                              ),
+                              Padding(
+                              padding:EdgeInsets.only(right: 150.0,top: 14.0),
+                              child: Text(task.toString()), 
+                              )
+                          ],
+                        ),                        
+                        ),
                       ),
                     ),
                   ),
                 SizedBox(width: 10.0),
                   Padding(
                     padding:const EdgeInsets.all(8.0),
-                    child: Container(
-                      child: Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24.0),
-                      shadowColor: Color(0x802196F3),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.school,color:Colors.blue,),
-                              ),
-                              Padding(
-                                padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
-                                child: Icon(Icons.more_vert), 
-                                )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 150.0,top: 20.0),
-                            child: Text("1 Task restants"),
-                          ),
-                          Padding(
-                            padding:EdgeInsets.only(right: 200.0,top: 10.0),
-                            child: Text("READ"), 
-                            
+                    child: GestureDetector(
+                      onTap: ()
+                      {
+                        value.typeTask = "MOVIES";
+                        val="MOVIES";
+                        getData(val);
+                      },
+                      child: Container(
+                        child: Material(
+                        color: Colors.white,
+                        elevation: 14.0,
+                        borderRadius: BorderRadius.circular(24.0),
+                        shadowColor: Color(0x802196F3),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.school,color:Colors.blue,),
+                                ),
+                                Padding(
+                                  padding:const EdgeInsets.only(left: 100.0,top: 10.0,bottom: 50.0),
+                                  child: Icon(Icons.more_vert), 
+                                  )
+                              ],
                             ),
                             Padding(
-                            padding:EdgeInsets.only(right: 166.0,top: 5.0),
-                            child: Text("READ"), 
-                            )
-                        ],
-                      ),
+                              padding: const EdgeInsets.only(right: 150.0,top: 20.0),
+                              child: Text("$count Task restants"),
+                            ),
+                            Padding(
+                              padding:EdgeInsets.only(right: 200.0,top: 10.0),
+                              child: Text("MOVIES"), 
+                              
+                              ),
+                              Padding(
+                              padding:EdgeInsets.only(right: 166.0,top: 5.0),
+                              child: Text(task.toString()), 
+                              )
+                          ],
+                        ),
+                        ),
                       ),
                     ),
                   ),
@@ -417,14 +547,16 @@ DateTime dd;
     {
       setState(() {
         position=pp;
+        
       });
       getAddress();
+      
     }).catchError((e)
     {
       print(e);
     });
   }
-  //method whiche translate the coordinates into an address
+  //method which translate the coordinates into an address
    void getAddress() async
   {
     try {
@@ -433,7 +565,7 @@ DateTime dd;
       setState(() {
         address = "${place.subLocality},${place.locality},${place.country}";
         print(address);
-        locality=place.locality;
+        locality=place.country;   //place.locality;
       });
     } catch (e) {
       print(e);
@@ -444,27 +576,48 @@ DateTime dd;
 
     void getTemp() async
   {
-    var response = await http.get("https://samples.openweathermap.org/data/2.5/weather?q=$locality&appid=cdb3fafadc8c3e51b26442472ce85574");
+    var response = await http.get("https://samples.openweathermap.org/data/2.5/weather?q=dakar&appid=cdb3fafadc8c3e51b26442472ce85574");
     var data=json.decode(response.body);
     temp=data["main"]['temp'];
     setState(() {
-      temp1=temp;
+      temp1=temp.toString();
     });
     print(temp);
+    
   }
 
   printTask() async
   {
-    var rr= await db.fetchTask();
+    var rr= await db.fetchAllTasks();
 
     for(var i in rr)
     {
-        setState(() {
+      if(i.values.elementAt(5)==0)
+      {
+         setState(() {
           counter++;
-          ll=i.values.elementAt(2);
         });
-      
+      }
     }
   
+  }
+
+  countTasks(String taskTypee) async
+  {
+    count=0;
+    var cc = await DbHelper().db;
+    var request = await cc.rawQuery("SELECT * FROM tache");
+    for(var i in request)
+    {
+      if((i.values.elementAt(1)==taskTypee) && (i.values.elementAt(5)==0))
+      {
+        count++;
+        print(count);
+        task=i.values.elementAt(2);
+        print(task);
+      }
+
+    }
+
   }
 }

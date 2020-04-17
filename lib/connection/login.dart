@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signin.dart';
 import '../Database/dbhelper.dart';
-//import '../models/user.dart';
 import '../models/home.dart';
-import '../models/date_picker.dart';
 import '../models/globalThing.dart' as value;
+import 'package:flutter_emoji/flutter_emoji.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,6 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var parser = EmojiParser();
   String toff;
   bool userVal;
   String username;
@@ -80,16 +80,8 @@ class _LoginPageState extends State<LoginPage> {
               child: RaisedButton(
                 child: Text("Login"),
                 onPressed: () async
-                {
-                  // fetchData();
-                  // //var name = await db.fetchUser1(username,password);
-                  // print(name);
-
-                  
-                  
-                  fetchUser();
-                  //toff=await db.fetchUser1(username, password);
-                  
+                {   
+                  fetchUser();  
                 },
               ),
             ),
@@ -200,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
     _snackbar()
   {
     final snackbar = new SnackBar(
-      content: Text("PLEASE CREATE AN ACCOUNT BEFORE CONNECTING"),
+      content: Text("PLEASE CREATE AN ACCOUNT BEFORE CONNECTING "+parser.emojify(":lock:")),
     );
     _scaffold.currentState.showSnackBar(snackbar);
 }

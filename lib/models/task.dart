@@ -5,10 +5,21 @@ class Task {
   String datedeb;
   String dateFin;
   String type;
-  String userID;
-  bool val;
+  int etat;
+  bool val=false;
+  int id;
 
-  Task({this.task,this.datedeb,this.dateFin,this.type,this.userID,this.val});
+  Task({this.id,this.task,this.datedeb,this.dateFin,this.type,this.etat,this.val});
+
+
+  // factory Task.fromdd(Map<String, dynamic> data) => Task(
+  //   type: data["type"],
+  //   task: data["nom"],
+  //   datedeb: data["datedeb"],
+  //   dateFin: data["datefin"],
+  //   userID: data["userID"],
+  //   val: data["val"]==0?false:true,
+  // );
 
     Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -16,9 +27,27 @@ class Task {
     map["nom"] = task;
     map["datedeb"] = datedeb;
     map["datefin"] = dateFin;
-    map["userID"] = userID;
-    map["val"]=val;
+    map["etat"] = etat;
+    
     return map;
   }
   
+  Task.fromMap(dynamic obj)
+  {
+    type=obj["type"];
+    task = obj["nom"];
+    datedeb=obj["datedeb"];
+    dateFin=obj["dateFin"];
+    etat=obj["etat"];
+  }
+
+  bool get iscomplet
+  {
+    val=false;
+    return val;
+  }
+  set isCompleted(bool value)
+  {
+    val = value;
+  }
 }

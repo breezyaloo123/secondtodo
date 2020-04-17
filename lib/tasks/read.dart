@@ -91,9 +91,7 @@ class _TaskReadState extends State<TaskRead> {
                     .then((date)
                       {
                           setState(() {
-                          _dateTime=date;
-                          
-                          
+                          _dateTime=date;  
                       });
                       
                       });
@@ -189,7 +187,7 @@ class _TaskReadState extends State<TaskRead> {
 
   void addTask() async
   {
-    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,userID: value.pseudo,val: false);
+    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,etat: 0);
     await db.addTask(task1);
     print("Successful");
   }
