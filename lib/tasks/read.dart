@@ -23,6 +23,7 @@ class _TaskReadState extends State<TaskRead> {
     String type ="READ";
     String datedeb;
     String datefin;
+    String taskValue;
 
     var db = new DbHelper();
   
@@ -55,7 +56,7 @@ class _TaskReadState extends State<TaskRead> {
           height: 540.0,
           child: ListView(
             children: <Widget>[
-              Text(task==null?'':task.toString()),
+              Text(taskValue==null?'':taskValue.toString()),
               Text(_dateTime==null?'':datedeb=_dateTime.day.toString()+'-'+_dateTime.month.toString()+'-'+_dateTime.year.toString()),
               Text(_dateTime1==null?'':datefin=_dateTime1.day.toString()+'-'+_dateTime1.month.toString()+'-'+_dateTime1.year.toString()),
             ],
@@ -153,6 +154,13 @@ class _TaskReadState extends State<TaskRead> {
                     onPressed: ()
                     {
                       setState(() {
+                        if(task==null)
+                        {
+                          taskValue="Renseigner la tache Please";
+                        }
+                        else{
+                          taskValue = task.toString();
+                        }
                         
                       });
                     }),
@@ -187,7 +195,7 @@ class _TaskReadState extends State<TaskRead> {
 
   void addTask() async
   {
-    Task task1 = new Task(task: task,datedeb: datedeb,dateFin: datefin,type: val,etat: 0);
+    Task task1 = new Task(task: taskValue,datedeb: datedeb,dateFin: datefin,type: val,etat: 0);
     await db.addTask(task1);
     print("Successful");
   }
